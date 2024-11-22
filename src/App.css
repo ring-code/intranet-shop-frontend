@@ -36,3 +36,82 @@
     transform: rotate(360deg);
   }
 }
+
+.navbar-email {
+  cursor: default;  /* Disables the pointer cursor */
+  pointer-events: none;  /* Ensures it's not clickable */
+}
+
+.navbar-email:hover {
+  background-color: transparent;  /* Prevents hover effects */
+}
+
+.product-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: scale(1.05); /* Slightly zoom in on hover */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(10, 138, 29, 0.2); /* Semi-transparent green */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover::before {
+  opacity: 1; /* Make the overlay visible */
+}
+
+.add-to-cart-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.add-to-cart-card:hover {
+  transform: scale(1.05); /* Slightly zoom in on hover */
+  box-shadow: 0 4px 20px rgba(10, 8, 128, 0.2); /* Add shadow on hover */
+}
+
+.add-to-cart-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(11, 32, 148, 0.2); /* Semi-transparent green */
+  opacity: 0;  /* Make it invisible initially */
+  transition: opacity 0.3s ease;
+}
+
+/* Only make the overlay visible on hover */
+.add-to-cart-card:hover::before {
+  opacity: 1; /* Make the overlay visible */
+}
+
+.navbar-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensures the navbar stays on top of other content */
+}
+
+body {
+  padding-top: 60px; 
+}
+
+
+
