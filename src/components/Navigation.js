@@ -1,11 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '../logo.svg';
 import { Link } from 'react-router-dom';
 import { Container, Navbar, Nav, Image } from 'react-bootstrap';
 
+import { useCart } from './CartContext';
 
-const Navigation = ({isLoggedIn, handleLogout, userEmail, cart }) => {
-    return <Navbar bg="dark" variant="dark" expand="lg" className='nav'>
+const Navigation = ({isLoggedIn, handleLogout}) => {
+    const prevIsLoggedIn = React.useRef(isLoggedIn);
+    const { cart, resetCart } = useCart();
+    const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || ''); // Initialize with localStorage value
+
+    useEffect(() => {
+      // Sync the userEmail from localStorage whenever the component mounts
+      const email = localStorage.getItem('userEmail');
+      setUserEmail(email || '');
+    }, [isLoggedIn]); // Re-run this effect when the login status changes
+    
+    useEffect(() => {
+      // Detect logout by comparing current and previous login state
+      if (!isLoggedIn && prevIsLoggedIn.current) {
+        resetCart(); // Clear the cart only on logout
+      }
+      prevIsLoggedIn.current = isLoggedIn;
+    }, [isLoggedIn, resetCart]); // Runs whenever isLoggedIn changes
+    
+    
+    const totalItemsInCart = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+    
+
+    return <Navbar bg="dark" variant="dark" expand="lg" className='navbar-fixed'>
           
     <Container>
       
@@ -19,10 +43,11 @@ const Navigation = ({isLoggedIn, handleLogout, userEmail, cart }) => {
         
         <Nav className="me-auto">
           <Nav.Link as={Link} to="/">Home</Nav.Link>
-          
+          <Nav.Link as={Link} to="/orders">Bestellungen</Nav.Link>
           {isLoggedIn ?
           <>
             <Nav.Link as={Link} to="/products">Shop</Nav.Link>
+            
             
           </>
           :
@@ -40,10 +65,13 @@ const Navigation = ({isLoggedIn, handleLogout, userEmail, cart }) => {
             {isLoggedIn ? (
               <>                
                 <Nav.Link href="#" className="text-light navbar-email">{userEmail}</Nav.Link>
+                
                 {cart && cart.length > 0 && (
-                  <Nav.Link as={Link} to="/cart">Warenkorb ({cart.length})</Nav.Link>
+                  <Nav.Link as={Link} to="/cart">Warenkorb ({totalItemsInCart})</Nav.Link>
                 )}
+                
                 <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+              
               </>
             ) : (
               <></>

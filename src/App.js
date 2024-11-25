@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import { Routes, Route } from 'react-router-dom';
-import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 import Home from './components/Home';
@@ -12,6 +11,8 @@ import ProductList from './components/ProductList';
 import Navigation from './components/Navigation';
 import Cart from './components/Cart';
 import ProductDetail from './components/ProductDetail';
+import { CartProvider } from './components/CartContext.js';
+import Orders from './components/Orders.js';
 
 
 function App() {
@@ -21,10 +22,8 @@ function App() {
   const [cart, setCart] = useState([]);
   const navigate = useNavigate();
 
-  const handleToggleLogin = () => {
-    setIsLoggedIn(!isLoggedIn);
-  };
 
+  //STILL NEEDED? cart gets deleted on logout
   useEffect(() => {
     
     const token = localStorage.getItem('token');
@@ -52,40 +51,48 @@ function App() {
     }
   
   }, []);
+
+  
   
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
-    // remove cart?
+    localStorage.removeItem('cart');
     setIsLoggedIn(false);
+    setUserEmail(null);
+    setCart([]);
     navigate('/');
   };
 
   return (
-    
-    <div className="App">
-      <Navigation 
-        isLoggedIn={isLoggedIn} 
-        handleLogout={handleLogout} 
-        userEmail={userEmail}
-        cart={cart}
-      />
-
-      <Container className="mt-4">
-        <Routes>
-          <Route path ="/" element={<Home isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
-          <Route path ="/register" element={<RegistrationForm isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
-          <Route path ="/login" element={<Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
-          <Route path ="/products" element={<ProductList />} />
-          <Route path="/products/:id" element={<ProductDetail />} />
-          <Route path ="/cart" element={<Cart />} />
-
-         
-        </Routes>
+     
+    <CartProvider>  
+      <div className="App">
         
-      </Container>
-    </div>
+        <Navigation 
+          isLoggedIn={isLoggedIn} 
+          handleLogout={handleLogout} 
+          userEmail={userEmail}
+          cart={cart}
+        />
+       
+          <Routes>
+            
+            <Route path ="/" element={<Home isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
+            <Route path ="/register" element={<RegistrationForm isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
+            <Route path ="/login" element={<Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
+            <Route path ="/products" element={<ProductList />} />
+            <Route path="/products/:id" element={<ProductDetail />} />
+            <Route path ="/cart" element={<Cart />} />
+            <Route path ="/orders" element={<Orders />} />
+          
+          </Routes>
+          
+        
+      </div>
+    </CartProvider>
+    
   );
 }
 

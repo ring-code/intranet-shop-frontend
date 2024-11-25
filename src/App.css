@@ -113,5 +113,10 @@ body {
   padding-top: 60px; 
 }
 
+.custom-modal .modal-header-center .modal-title {
+  text-align: center;
+  width: 100%;
+}
+
 
 

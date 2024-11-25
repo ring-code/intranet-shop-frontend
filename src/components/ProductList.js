@@ -1,23 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Spinner, Alert } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Card, Spinner, Alert, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from './CartContext';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [cart, setCart] = useState([]);
-  const navigate = useNavigate(); // For programmatic navigation
+  const [showModal, setShowModal] = useState(false);
+  const [modalImage, setModalImage] = useState('');
+  const [selectedProduct, setSelectedProduct] = useState(null); // New state for selected product
+  const navigate = useNavigate();
+  const { cart, setCart } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch('https://fi.mshome.net:3001/products', {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/products`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
         const data = await response.json();
@@ -34,19 +38,23 @@ const ProductList = () => {
     };
 
     fetchProducts();
-
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    setCart(storedCart);
   }, []);
 
-  const handleAddToCart = (productId, price, title, image_url) => {
+  const handleAddToCart = (productId, price, title, description, image_url) => {
     const newCart = [...cart];
-    const itemIndex = newCart.findIndex((item) => item.productId === productId);
-    
+    const itemIndex = newCart.findIndex((item) => item.product_id === productId);
+
     if (itemIndex >= 0) {
-      newCart[itemIndex].quantity += 1;
+      newCart[itemIndex].quantity += 1; // Increase quantity if already in the cart
     } else {
-      newCart.push({ productId, quantity: 1, price, title, image_url });
+      newCart.push({
+        product_id: productId,
+        quantity: 1,
+        price,
+        title,
+        description,
+        image_url
+      });
     }
 
     setCart(newCart);
@@ -54,8 +62,17 @@ const ProductList = () => {
   };
 
   const handleCardClick = (product) => {
-    // Pass the product details via the state object
-    navigate(`/products/${product.id}`, { state: { product } });
+    navigate(`/products/${product.product_id}`, { state: { product } });
+  };
+
+  const handleImageClick = (imageUrl, product) => {
+    setModalImage(imageUrl); // Set the image URL
+    setSelectedProduct(product); // Set the selected product to access its title
+    setShowModal(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false); // Close the modal
   };
 
   if (loading) {
@@ -68,51 +85,70 @@ const ProductList = () => {
 
   return (
     <div className="container mt-4">
+      <h2>Produkte</h2>
       {products.length === 0 ? (
         <div className="text-center w-100">
           <Alert variant="warning">Keine Produkte gefunden.</Alert>
         </div>
       ) : (
         products.map((product) => (
-          <div className="product-wrapper mb-4" key={product.id}>
-            <Card
-              className="product-card shadow-sm"
-              onClick={() => handleCardClick(product)} // Pass the entire product to the ProductDetails component
-              style={{ cursor: 'pointer' }}
-            >
-              <Card.Body>
-                <div className="d-flex align-items-start">
-                  <div className="me-3">
-                    <Card.Img
-                      variant="top"
-                      src={`https://fi.mshome.net:3001/${product.image_url || '/static/images/default-product.jpg'}`}
-                      style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                    />
-                  </div>
-                  <div className="flex-grow-1">
-                    <Card.Title>{product.title}</Card.Title>
-                    <Card.Text>
-                      {product.description.length > 100
-                        ? product.description.substring(0, 100) + '...'
-                        : product.description}
-                    </Card.Text>
-                  </div>
-                </div>
-              </Card.Body>
-            </Card>
+          <div className="product-wrapper mb-4 d-flex" key={product.product_id}>
+            {/* Image Card on the Left */}
+            <div className="me-3" style={{ flex: '0 0 150px', display: 'flex', flexDirection: 'column' }}>
+              <Card className="shadow-sm" style={{ height: '100%' }} onClick={() => handleImageClick(`${process.env.REACT_APP_SERVER_URL}/${product.image_url || '/static/images/default-product.jpg'}`, product)}>
+                <Card.Img
+                  variant="top"
+                  src={`${process.env.REACT_APP_SERVER_URL}/${product.image_url || '/static/images/default-product.jpg'}`}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </Card>
+            </div>
 
-            <Card
-              className="add-to-cart-card shadow-sm"
-              style={{ cursor: 'pointer' }}
-              onClick={() => handleAddToCart(product.id, product.price, product.title, product.imageUrl)}
-            >
-              <Card.Body className="text-center">
-                <span className="text-muted d-block">In den Warenkorb</span>
-              </Card.Body>
-            </Card>
+            {/* Right Side - Two Cards */}
+            <div className="d-flex flex-column flex-grow-1 align-items-stretch" style={{ height: '100%' }}>
+              {/* Description & Price Card */}
+              <Card
+                className="product-card shadow-sm mb-2"
+                onClick={() => handleCardClick(product)}
+                style={{ cursor: 'pointer', flex: '1' }}
+              >
+                <Card.Body>
+                  <Card.Title>{product.title}</Card.Title>
+                  <Card.Text>
+                    {product.description.length > 100
+                      ? product.description.substring(0, 100) + '...'
+                      : product.description}
+                  </Card.Text>
+                  <div className="d-flex justify-content-center align-items-center">
+                    <strong>{product.price}€</strong> 
+                  </div>
+                </Card.Body>
+              </Card>
+
+              {/* "In den Warenkorb" Card */}
+              <Card
+                className="add-to-cart-card shadow-sm"
+                style={{ cursor: 'pointer', flex: '0 0 30%' }}
+                onClick={() => handleAddToCart(product.product_id, product.price, product.title, product.description, product.image_url)}
+              >
+                <Card.Body className="d-flex justify-content-center align-items-center">
+                  <span className="text-muted d-block">In den Warenkorb</span>
+                </Card.Body>
+              </Card>
+            </div>
           </div>
         ))
       )}
+
+      {/* Modal to show the larger image */}
+      <Modal show={showModal} onHide={handleCloseModal} centered size="lg" className="custom-modal">
+        <Modal.Header closeButton className="modal-header-center">
+          <Modal.Title>{selectedProduct?.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <img src={modalImage} alt="Large Product" className="img-fluid" />
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

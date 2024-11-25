@@ -15,7 +15,7 @@ function Login({isLoggedIn, setIsLoggedIn}) {
         const email = e.target.elements.email.value;
         const password = e.target.elements.password.value;
         try {
-          const response = await fetch(`https://fi.mshome.net:3001/login`, {
+          const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -28,8 +28,9 @@ function Login({isLoggedIn, setIsLoggedIn}) {
             localStorage.setItem('token', data.token); 
             localStorage.setItem('userId', data.userId);
             localStorage.setItem('userEmail', data.userEmail);
-            setMessage('Erfolgreich eingeloggt! Sie werden zum Shop weitergeleitet.');
+            localStorage.setItem('cart', '[]');
             setIsLoggedIn(true);
+            setMessage('Erfolgreich eingeloggt! Sie werden zum Shop weitergeleitet.');
             setTimeout(() => {
                 navigate('/products');
             }, 2000);

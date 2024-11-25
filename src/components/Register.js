@@ -32,7 +32,7 @@ const RegistrationForm = () => {
 
         try {
             // POST request to backend for registration
-            const response = await fetch('https://fi.mshome.net:3001/register', {
+            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ const RegistrationForm = () => {
             <h2>Registrierung</h2>
 
             {error && <div className="error"><p>{error}</p></div>}
-            {success && <div className="success"><p>Registierung erfolgreich!</p></div>}
+            {success && <div className="success"><p>Registrierung erfolgreich!</p></div>}
 
             <form onSubmit={handleSubmit}>
                 <label htmlFor="email">Email:</label>
