@@ -118,5 +118,22 @@ body {
   width: 100%;
 }
 
+.back-button {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.home-link {
+  text-decoration: none;
+}
+
+.home-link a {
+  text-decoration: none;
+}
+
+.image-site-headline {
+  margin-left: '150px'  ;
+}
 
 

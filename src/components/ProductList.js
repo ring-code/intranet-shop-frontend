@@ -11,7 +11,7 @@ const ProductList = () => {
   const [modalImage, setModalImage] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null); // New state for selected product
   const navigate = useNavigate();
-  const { cart, setCart } = useCart();
+  const { handleAddToCart } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -40,27 +40,6 @@ const ProductList = () => {
     fetchProducts();
   }, []);
 
-  const handleAddToCart = (productId, price, title, description, image_url) => {
-    const newCart = [...cart];
-    const itemIndex = newCart.findIndex((item) => item.product_id === productId);
-
-    if (itemIndex >= 0) {
-      newCart[itemIndex].quantity += 1; // Increase quantity if already in the cart
-    } else {
-      newCart.push({
-        product_id: productId,
-        quantity: 1,
-        price,
-        title,
-        description,
-        image_url
-      });
-    }
-
-    setCart(newCart);
-    localStorage.setItem('cart', JSON.stringify(newCart));
-  };
-
   const handleCardClick = (product) => {
     navigate(`/products/${product.product_id}`, { state: { product } });
   };
@@ -85,7 +64,7 @@ const ProductList = () => {
 
   return (
     <div className="container mt-4">
-      <h2>Produkte</h2>
+      <h2 style={{marginLeft: '150px'}}>Produkte</h2>
       {products.length === 0 ? (
         <div className="text-center w-100">
           <Alert variant="warning">Keine Produkte gefunden.</Alert>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Alert, Row, Col, Card } from 'react-bootstrap';
+import { Row, Col, Card, Button, Alert, Form, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -43,48 +43,55 @@ function Login({isLoggedIn, setIsLoggedIn}) {
         }
     };
 
-    return (
+     return (
+    
+    <Container className="mt-5">
+      <h1>Anmeldung</h1>
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
-        <Card className="text-center shadow-sm">
+          <Card className="text-center shadow-sm">
             <Card.Body>
-            <Card.Title>Anmelden</Card.Title>
+              <Card.Title></Card.Title>
 
-            {message && <Alert variant={isLoggedIn ? "success" : "danger"}>{message}</Alert>}
+              {/* Show message */}
+              {message && <Alert variant={isLoggedIn ? "success" : "danger"}>{message}</Alert>}
 
-            <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit}>
+                {/* Email (Username) Field */}
                 <Form.Group controlId="email" className="mb-3">
-                <Form.Label>Benutzername</Form.Label>
-                <Form.Control
+                  
+                  <Form.Control
                     type="email"
                     placeholder="E-Mail-Adresse"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                />
+                  />
                 </Form.Group>
 
+                {/* Password Field */}
                 <Form.Group controlId="password" className="mb-3">
-                <Form.Label>Passwort</Form.Label>
-                <Form.Control
+                  
+                  <Form.Control
                     type="password"
                     placeholder="Passwort eingeben"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                />
+                  />
                 </Form.Group>
 
+                {/* Submit Button */}
                 <Button variant="primary" type="submit" className="w-100">
-                Anmelden
+                  Anmelden
                 </Button>
-            </Form>
-
+              </Form>
             </Card.Body>
-            </Card>
-            </Col>
-        </Row>
-    );
-}
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
 
 export default Login;

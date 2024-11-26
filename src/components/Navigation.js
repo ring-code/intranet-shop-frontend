@@ -27,7 +27,6 @@ const Navigation = ({isLoggedIn, handleLogout}) => {
     
     const totalItemsInCart = cart.reduce((acc, item) => acc + item.quantity, 0);
 
-    
 
     return <Navbar bg="dark" variant="dark" expand="lg" className='navbar-fixed'>
           
@@ -43,12 +42,14 @@ const Navigation = ({isLoggedIn, handleLogout}) => {
         
         <Nav className="me-auto">
           <Nav.Link as={Link} to="/">Home</Nav.Link>
-          <Nav.Link as={Link} to="/orders">Bestellungen</Nav.Link>
+          
           {isLoggedIn ?
           <>
             <Nav.Link as={Link} to="/products">Shop</Nav.Link>
-            
-            
+            {cart && cart.length > 0 && (
+                <Nav.Link as={Link} to="/cart">Warenkorb ({totalItemsInCart})</Nav.Link>
+            )}
+            <Nav.Link as={Link} to="/orders">Bestellungen</Nav.Link>
           </>
           :
           <>
@@ -66,9 +67,7 @@ const Navigation = ({isLoggedIn, handleLogout}) => {
               <>                
                 <Nav.Link href="#" className="text-light navbar-email">{userEmail}</Nav.Link>
                 
-                {cart && cart.length > 0 && (
-                  <Nav.Link as={Link} to="/cart">Warenkorb ({totalItemsInCart})</Nav.Link>
-                )}
+                
                 
                 <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
               

@@ -15,6 +15,7 @@ import { CartProvider } from './components/CartContext.js';
 import Orders from './components/Orders.js';
 
 
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
@@ -68,6 +69,7 @@ function App() {
   return (
      
     <CartProvider>  
+      
       <div className="App">
         
         <Navigation 
@@ -88,9 +90,9 @@ function App() {
             <Route path ="/orders" element={<Orders />} />
           
           </Routes>
-          
-        
+                  
       </div>
+    
     </CartProvider>
     
   );

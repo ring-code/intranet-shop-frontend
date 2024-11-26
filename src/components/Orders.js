@@ -1,52 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Spinner, Alert, Modal } from 'react-bootstrap';
+import { Card, Spinner, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [modalImage, setModalImage] = useState('');
-  const [selectedProduct, setSelectedProduct] = useState(null); // State for selected product details
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
-        const token = localStorage.getItem('token');
-        try {
-            const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/orders`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            const data = await response.json();
-            console.log('Fetched orders:', data); // Log the data to check if it's grouped properly
-            if (response.ok) {
-                setOrders(data);
-            } else {
-                setError('Fehler beim Laden der Bestellungen.');
-            }
-        } catch (err) {
-            setError('Ein Fehler ist aufgetreten.');
-        } finally {
-            setLoading(false);
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/orders`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        console.log('Fetched orders:', data); // Log the data to check if it's grouped properly
+        if (response.ok) {
+          setOrders(data);
+        } else {
+          setError('Fehler beim Laden der Bestellungen.');
         }
+      } catch (err) {
+        setError('Ein Fehler ist aufgetreten.');
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchOrders();
-}, []);
+  }, []);
 
-  const handleImageClick = (imageUrl, product) => {
-    setModalImage(imageUrl); // Set the image URL
-    setSelectedProduct(product); // Set the selected product details
-    setShowModal(true); // Open the modal
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false); // Close the modal
+   // Handle product click (navigating to product details page)
+   const handleProductClick = (product) => {
+    navigate(`/products/${product.product_id}`, { state: { product } });
   };
 
   if (loading) {
@@ -66,57 +58,46 @@ const Orders = () => {
         </div>
       ) : (
         orders.map((order) => (
-          <div key={order.order_id} className="order-wrapper mb-4">
-            <h5>Bestellung #{order.order_id}</h5>
-            <p><strong>Datum:</strong> {new Date(order.order_date).toLocaleDateString()}</p>
-            <p><strong>Gesamtbetrag:</strong> {order.total_amount}€</p>
-            
-
-            {order.items.map((item) => (
-              <div className="product-wrapper mb-3 d-flex" key={item.product_id}>
-                {/* Product Image */}
-                <div
-                  className="me-3"
-                  style={{ flex: '0 0 150px', cursor: 'pointer' }}
-                  onClick={() => handleImageClick(`${process.env.REACT_APP_SERVER_URL}/${item.image_url}`, item)}
-                >
-                  <Card className="shadow-sm">
-                    <Card.Img
-                      variant="top"
-                      src={`${process.env.REACT_APP_SERVER_URL}/${item.image_url}`}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                  </Card>
-                </div>
-
-                {/* Product Details */}
-                <div className="d-flex flex-column flex-grow-1 align-items-stretch">
-                  <Card className="product-card shadow-sm mb-2">
-                    <Card.Body>
-                      <Card.Title>{item.title}</Card.Title>
-                      <Card.Text>
-                        <strong>Menge:</strong> {item.quantity}<br />
-                        <strong>Einzelpreis:</strong> {item.price}€<br />
-                        <strong>Gesamt:</strong> {(item.quantity * item.price).toFixed(2)}€
-                      </Card.Text>
-                    </Card.Body>
-                  </Card>
-                </div>
+          <Card className="mb-4 shadow-sm" key={order.order_id}>
+            <Card.Body>
+              <Card.Title>
+              Bestellung vom: {new Date(order.order_date).toLocaleString('de-DE', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+              </Card.Title>
+              <hr />
+              <div className="order-items">
+                {order.items.map((item) => (
+                  <div className="mb-2" key={item.product_id}>
+                    <h5
+                      style={{ cursor: 'pointer', color: 'blue' }}
+                      onClick={() => handleProductClick(item)}  
+                    >
+                      {item.title} <span> x {item.quantity} </span>
+                    </h5>
+                    
+                    <div>                     
+                      {item.price}€
+                      <br />
+                      
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+              <hr />
+              <div className="total-amount">
+                <h5>
+                  Gesamtbetrag: {order.total_amount}€
+                </h5>
+              </div>
+            </Card.Body>
+          </Card>
         ))
       )}
-
-      {/* Modal to show larger image */}
-      <Modal show={showModal} onHide={handleCloseModal} centered size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>{selectedProduct?.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <img src={modalImage} alt="Large Product" className="img-fluid" />
-        </Modal.Body>
-      </Modal>
     </div>
   );
 };
