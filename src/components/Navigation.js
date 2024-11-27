@@ -1,31 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import logo from '../logo.svg';
 import { Link } from 'react-router-dom';
-import { Container, Navbar, Nav, Image,  Dropdown } from 'react-bootstrap';
-
+import { Container, Navbar, Nav, Image, Dropdown } from 'react-bootstrap';
 import { useCart } from './CartContext';
 
-const Navigation = ({isLoggedIn, isAdmin, handleLogout}) => {
-    const prevIsLoggedIn = React.useRef(isLoggedIn);
-    const { cart, resetCart } = useCart();
-    const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || '');
+/**
+ * Navigation component handles the navigation bar and updates based on the user's login state.
+ * It also synchronizes the cart and user information.
+ *
+ * @param {Object} props - The component props
+ * @param {boolean} props.isLoggedIn - The user's login state
+ * @param {boolean} props.isAdmin - The user's admin state
+ * @param {Function} props.handleLogout - Function to handle user logout
+ * @returns {JSX.Element} The navigation bar
+ */
+const Navigation = ({ isLoggedIn, isAdmin, handleLogout }) => {
+  const prevIsLoggedIn = React.useRef(isLoggedIn); 
+  const { cart, resetCart } = useCart(); 
+  const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || ''); 
 
-    useEffect(() => {
-      // Sync the userEmail from localStorage whenever the component mounts
-      const email = localStorage.getItem('userEmail');
-      setUserEmail(email || '');
-    }, [isLoggedIn]); // Re-run this effect when the login status changes
-    
-    useEffect(() => {
-      // Detect logout by comparing current and previous login state
-      if (!isLoggedIn && prevIsLoggedIn.current) {
-        resetCart(); // Clear the cart only on logout
-      }
-      prevIsLoggedIn.current = isLoggedIn;
-    }, [isLoggedIn, resetCart]); // Runs whenever isLoggedIn changes
-    
-    
-    const totalItemsInCart = cart.reduce((acc, item) => acc + item.quantity, 0);
+  
+  useEffect(() => {
+    const email = localStorage.getItem('userEmail'); 
+    setUserEmail(email || ''); 
+  }, [isLoggedIn]); 
+
+
+  useEffect(() => {
+    if (!isLoggedIn && prevIsLoggedIn.current) {
+      resetCart(); // Clear the cart if the user logs out
+    }
+    prevIsLoggedIn.current = isLoggedIn; // Update the previous login state
+  }, [isLoggedIn, resetCart]); // Runs when isLoggedIn or resetCart changes
+
+  /**
+   * Calculates the total number of items in the cart.
+   * @returns {number} Total number of items in the cart
+   */
+  const totalItemsInCart = cart.reduce((acc, item) => acc + item.quantity, 0);
 
     
     return <Navbar bg="dark" variant="dark" expand="lg" className='navbar-fixed'>
@@ -60,7 +72,7 @@ const Navigation = ({isLoggedIn, isAdmin, handleLogout}) => {
 
           {isLoggedIn && isAdmin && (
             <Dropdown>
-            <Dropdown.Toggle variant="success" id="dropdown-custom-components">
+            <Dropdown.Toggle  id="dropdown-custom-components">
               Administration
             </Dropdown.Toggle>
   
@@ -70,10 +82,7 @@ const Navigation = ({isLoggedIn, isAdmin, handleLogout}) => {
             </Dropdown.Menu>
           </Dropdown>
           )}
-
-        
-
-          
+         
 
         </Nav>
 
