@@ -189,11 +189,13 @@ const AdminProductInsert = () => {
             >
               Speichern
             </Card>
+
+            <BackButton />
           </Form>
         </Card.Body>
       </Card>
 
-      <BackButton />
+      
     </div>
   );
 };

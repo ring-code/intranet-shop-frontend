@@ -235,7 +235,7 @@ const AdminProductDetails = () => {
                   <td>
                     <Form.Control
                       as="textarea"
-                      rows={25}
+                      rows={10}
                       name="description"
                       value={formData.description}
                       onChange={handleChange}
@@ -250,7 +250,7 @@ const AdminProductDetails = () => {
 
             {/* Save Button */}
             <Card
-              className="add-to-card shadow-sm mb-3"
+              className="add-to-cart-card shadow-sm mb-3"
               onClick={handleSave}
               style={{ cursor: 'pointer', padding: '15px' }}
             >
@@ -274,11 +274,12 @@ const AdminProductDetails = () => {
                 <button onClick={cancelDelete}>Abbrechen</button>
               </div>
             )}
+            <BackButton />
           </Form>
         </Card.Body>
       </Card>
 
-      <BackButton />
+      
     </div>
   );
 };
