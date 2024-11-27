@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, Col, Card, Button, Alert, ListGroup } from 'react-bootstrap';
+import { Card, Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';  
 import { useCart } from './CartContext'; 
 
@@ -70,13 +70,6 @@ const Cart = () => {
   };
 
   
-  /**
-   * Handles card click for navigating to the product details page.
-   * @param {Object} product - The product object to navigate to.
-   */
-  const handleCardClick = (product) => {
-    navigate(`/products/${product.product_id}`, { state: { product } });
-  };
 
   /**
    * Places the order for the products in the cart by sending a request to the server.
@@ -121,125 +114,155 @@ const Cart = () => {
   };
 
   return (
-    <div className="container px-0 mt-4">
-      <h2 style={{ marginLeft: '150px' }}>Warenkorb</h2>
+    <div className="container px-0 mt-4 mb-3">
+      <h2 className="picture-site-aligned-text mb-4">Warenkorb</h2>
   
-      {/* Success and Error Messages */}
-      {successMessage && <Alert variant="success">{successMessage}</Alert>}
-      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+      {/* Main Card Container */}
+      <Card.Body className="position-relative">
+        {/* Success and Error Messages */}
+        {successMessage && <Alert variant="success">{successMessage}</Alert>}
+        {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
   
-      {cart.length === 0 ? (
-        <div className="text-center w-100">
-          <Alert variant="warning">Ihr Warenkorb ist leer.</Alert>
-        </div>
-      ) : (
-        <>
-          {cart.map((product) => (
-            <div className="product-wrapper mb-4 d-flex" key={product.product_id} style={{ alignItems: 'stretch' }}>
-              {/* Left Image Card */}
-              <div className="me-3" style={{ flex: '0 0 150px', display: 'flex', flexDirection: 'column' }}>
-                <Card className="shadow-sm" style={{ height: '100%' }}>
-                  <Card.Img
-                    variant="top"
-                    src={`${process.env.REACT_APP_SERVER_URL}/${product.image_url || '/default-product-image.jpg'}`}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                </Card>
-              </div>
-  
-              {/* Right Side: Description, Quantity, and Total Price */}
-              <div className="d-flex flex-column flex-grow-1 px-0 m-0" style={{ height: '100%',}}>
-                {/* Description & Price Card */}
-                
-                <Card                 
-                  className="product-description-card shadow-sm mb-2"
-                  onClick={() => handleCardClick(product)}
-                  style={{ cursor: 'pointer', flex: '1' }}
+        {cart.length === 0 ? (
+          <div className="text-center w-100">
+            <Alert variant="warning">Ihr Warenkorb ist leer.</Alert>
+          </div>
+        ) : (
+          <>
+            {cart.map((product) => (
+              <div key={product.product_id} className="mb-4">
+                <Card
+                  className="product-card shadow-sm d-flex align-items-stretch"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'stretch',
+                  }}
                 >
-                  <Card.Body>
-                    <Card.Title>{product.title}</Card.Title>
-                    <Card.Text>
-                      {product.description.length > 100
-                        ? product.description.substring(0, 100) + '...'
-                        : product.description}
-                    </Card.Text>
-                    <div className="d-flex justify-content-center align-items-center">
-                      <strong>{product.price}€</strong>
+                  {/* Image Container with fixed size */}
+                  <div
+                    style={{
+                      flex: '0 0 150px',
+                      height: '150px', // Fixed height
+                      overflow: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center', // Ensure image is centered
+                    }}
+                  >
+                    <img
+                      className="ml-1 mb-1"
+                      src={`${process.env.REACT_APP_SERVER_URL}/${product.image_url || '/default-product-image.jpg'}`}
+                      alt={product.title}
+                      style={{
+                        width: '100%', // Ensure the image fills the container
+                        height: '100%', // Ensure the image fills the container
+                        objectFit: 'cover', // Ensure the image scales properly
+                      }}
+                    />
+                  </div>
+  
+                  {/* Title, Description, and Price */}
+                  <div
+                    className="d-flex flex-column flex-grow-1 p-3"
+                    style={{
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    {/* Title and Description */}
+                    <div>
+                      <Card.Title>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            navigate(`/products/${product.product_id}`, { state: { product } });
+                          }}
+                        >
+                          {product.title}
+                        </a>
+                      </Card.Title>
+                      <Card.Text>
+                        {product.description.length > 100
+                          ? product.description.substring(0, 100) + '...'
+                          : product.description}
+                      </Card.Text>
                     </div>
-                  </Card.Body>
+  
+                    {/* Bottom Right Corner Quantity Control */}
+                    <div
+                      className="position-absolute"
+                      style={{
+                        bottom: '10px',
+                        right: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      {/* Decrease Button */}
+                      <button
+                        className="minus-button btn btn-outline-secondary ms-2 me-2"
+                        onClick={() => handleDecreaseQuantity(product.product_id)}
+                      >
+                        -
+                      </button>
+  
+                      {product.quantity}
+                      {/* Increase Button */}
+                      <button
+                        className="plus-button btn btn-outline-secondary ms-2 me-2"
+                        onClick={() => handleIncreaseQuantity(product.product_id)}
+                      >
+                        +
+                      </button>
+                      <strong> {(product.price * product.quantity).toFixed(2)} €</strong>
+                    </div>
+                  </div>
                 </Card>
   
-                {/* Row for Quantity Control and Total Price */}
-                <Row className="w-100 d-flex" style={{ flex: '1' }}>
-                  {/* Decrease Button Card */}
-                  <Col xs={3} className="d-flex">
-                    <Card
-                      className="remove-from-cart-card shadow-sm "
-                      style={{ cursor: 'pointer', flex: '1', height: '100%' }}
-                      onClick={() => handleDecreaseQuantity(product.product_id)}
-                    >
-                      <Card.Body className="d-flex justify-content-center align-items-center" style={{ height: '100%' }}>
-                        <span className="text-muted d-block">-</span>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-  
-                  {/* Quantity Card */}
-                  <Col xs={3} className="d-flex">
-                    <Card className="shadow-sm " style={{ flex: '1', height: '100%' }}>
-                      <Card.Body className="d-flex justify-content-center align-items-center" style={{ height: '100%' }}>
-                        <span className="text-muted d-block">{product.quantity}</span>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-  
-                  {/* Increase Button Card */}
-                  <Col xs={3} className="d-flex">
-                    <Card
-                      className="add-to-cart-card shadow-sm "
-                      style={{ cursor: 'pointer', flex: '1', height: '100%' }}
-                      onClick={() => handleIncreaseQuantity(product.product_id)}
-                    >
-                      <Card.Body className="d-flex justify-content-center align-items-center" style={{ height: '100%' }}>
-                        <span className="text-muted d-block">+</span>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-  
-                  {/* Total Price Card */}
-                  <Col xs={3} className="d-flex">
-                    <Card className="product-card shadow-sm " style={{ flex: '1', height: '100%' }}>
-                      <Card.Body className="d-flex justify-content-center align-items-center" style={{ height: '100%' }}>
-                        <strong>{(product.price * product.quantity).toFixed(2)}€</strong>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
+                {/* Delete Button */}
+                <Card
+                  className="remove-from-cart-card shadow-sm mb-3 mt-2"
+                  onClick={() => handleRemoveFromCart(product.product_id)} 
+                  style={{
+                    cursor: 'pointer',
+                    padding: '15px',
+                    backgroundColor: '#f8d7da',
+                    textAlign: 'center',
+                  }}
+                >
+                  Aus Warenkorb entfernen
+                </Card>
               </div>
-            </div>
-          ))}
+            ))}
   
-          {/* Total Price for All Products */}
-          {cart.length > 0 && (
-            <Card className="product-card shadow-sm " style={{ flex: '1' }}>
-              <Card.Body>
-                <Card.Title>Gesamtpreis für alle Produkte: <strong>{calculateTotal()} €</strong></Card.Title>
-                <br />
-                <Button variant="primary" onClick={placeOrder} style={{ width: '100%' }}>
-                  Bestellung abschicken
-                </Button>
-              </Card.Body>
-            </Card>
-          )}
-        </>
-      )}
+            {/* Total Price for All Products */}
+            <div className="d-flex justify-content-between align-items-center w-100">
+              <h3 className="picture-site-aligned-text text-center w-100" style={{ whiteSpace: 'nowrap' }}>
+                Gesamtpreis für alle Produkte:
+              </h3>
+              <h3 className="ms-auto" style={{ whiteSpace: 'nowrap' }}>
+                <strong>{calculateTotal()} €</strong>
+              </h3>
+            </div>
+  
+            {cart.length > 0 && (
+              <Card
+                className="add-to-cart-card shadow-sm"
+                style={{ flex: '1', marginTop: '20px' }}
+                onClick={placeOrder}
+              >
+                <Card.Body>Bestellung abschicken</Card.Body>
+              </Card>
+            )}
+          </>
+        )}
+      </Card.Body>
     </div>
   );
   
   
-  
-  
-  
+    
   
 };
 
