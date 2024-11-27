@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const BackButton = () => {
@@ -15,9 +15,16 @@ const BackButton = () => {
   };
 
   return (
-    <Button variant="primary" className="back-button" onClick={handleBack}>
+    <Card
+      className="back-card shadow-sm text-center"
+      onClick={handleBack}
+      
+    >
+      <Card.Body>
         Zurück
-    </Button>
+        
+      </Card.Body>
+    </Card>
   );
 };
 
