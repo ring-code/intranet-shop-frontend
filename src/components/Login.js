@@ -3,11 +3,14 @@ import { Row, Col, Card, Button, Alert, Form, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 
 
-function Login({isLoggedIn, setIsLoggedIn}) {
-    const [message, setMessage] = useState('');
+function Login({isLoggedIn, setIsLoggedIn, setIsAdmin}) {
+    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
     
 
     const handleSubmit = async (e) => {
@@ -25,26 +28,33 @@ function Login({isLoggedIn, setIsLoggedIn}) {
           const data = await response.json();
 
           if (response.ok) {
+            const isAdminBool = data.isAdmin === 1 ? 'true' : 'false';
+
             localStorage.setItem('token', data.token); 
             localStorage.setItem('userId', data.userId);
             localStorage.setItem('userEmail', data.userEmail);
+            localStorage.setItem('isAdmin', isAdminBool);
             localStorage.setItem('cart', '[]');
+            localStorage.setItem('isLoggedIn', 'true');
             setIsLoggedIn(true);
-            setMessage('Erfolgreich eingeloggt! Sie werden zum Shop weitergeleitet.');
+            setIsAdmin(data.isAdmin);           
+            setSuccess('Erfolgreich eingeloggt! Sie werden zum Shop weitergeleitet.');
             setTimeout(() => {
                 navigate('/products');
             }, 2000);
+          
           } else {
-            setMessage(data.error || 'Login fehlgeschlagen');
+            setError(data.error || 'Login fehlgeschlagen');
           }
         } catch (error) {
           console.error("Fehler beim Login:", error);
-          setMessage("Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
+          setError("Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.");
         }
+        
     };
 
      return (
-    
+      
     <Container className="mt-5">
       <h1>Anmeldung</h1>
       <Row className="justify-content-center">
@@ -53,8 +63,9 @@ function Login({isLoggedIn, setIsLoggedIn}) {
             <Card.Body>
               <Card.Title></Card.Title>
 
-              {/* Show message */}
-              {message && <Alert variant={isLoggedIn ? "success" : "danger"}>{message}</Alert>}
+              {/* Error and Success Alerts */}
+              {error && <Alert variant="danger">{error}</Alert>}
+              {success && <Alert variant="success">{success}</Alert>}
 
               <Form onSubmit={handleSubmit}>
                 {/* Email (Username) Field */}

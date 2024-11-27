@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import logo from '../logo.svg';
 import { Link } from 'react-router-dom';
-import { Container, Navbar, Nav, Image } from 'react-bootstrap';
+import { Container, Navbar, Nav, Image,  Dropdown } from 'react-bootstrap';
 
 import { useCart } from './CartContext';
 
-const Navigation = ({isLoggedIn, handleLogout}) => {
+const Navigation = ({isLoggedIn, isAdmin, handleLogout}) => {
     const prevIsLoggedIn = React.useRef(isLoggedIn);
     const { cart, resetCart } = useCart();
-    const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || ''); // Initialize with localStorage value
+    const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || '');
 
     useEffect(() => {
       // Sync the userEmail from localStorage whenever the component mounts
@@ -27,7 +27,7 @@ const Navigation = ({isLoggedIn, handleLogout}) => {
     
     const totalItemsInCart = cart.reduce((acc, item) => acc + item.quantity, 0);
 
-
+    
     return <Navbar bg="dark" variant="dark" expand="lg" className='navbar-fixed'>
           
     <Container>
@@ -57,6 +57,21 @@ const Navigation = ({isLoggedIn, handleLogout}) => {
           <Nav.Link as={Link} to="/register">Registrierung</Nav.Link>
           </>
           }
+
+          {isLoggedIn && isAdmin && (
+            <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-custom-components">
+              Administration
+            </Dropdown.Toggle>
+  
+            <Dropdown.Menu>
+              <Dropdown.Item as={Link} to="/admin/products">Produkte verwalten</Dropdown.Item>
+              <Dropdown.Item as={Link} to="/admin/insert">Produkt hinzufügen</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          )}
+
+        
 
           
 

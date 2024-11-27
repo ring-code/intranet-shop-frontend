@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Spinner, Alert, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from './CartContext';
 
-const ProductList = () => {
+const AdminProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalImage, setModalImage] = useState('');
-  const [selectedProduct, setSelectedProduct] = useState(null); // New state for selected product
+  const [selectedProduct, setSelectedProduct] = useState(null); 
   const navigate = useNavigate();
-  const { handleAddToCart } = useCart();
 
   useEffect(() => {
+    
+    
+
     const fetchProducts = async () => {
       const token = localStorage.getItem('token');
       try {
@@ -45,13 +46,18 @@ const ProductList = () => {
   };
 
   const handleImageClick = (imageUrl, product) => {
-    setModalImage(imageUrl); // Set the image URL
-    setSelectedProduct(product); // Set the selected product to access its title
-    setShowModal(true); // Open the modal
+    setModalImage(imageUrl); 
+    setSelectedProduct(product);
+    setShowModal(true);
   };
 
   const handleCloseModal = () => {
-    setShowModal(false); // Close the modal
+    setShowModal(false); 
+  };
+
+  
+  const adminEdit = (product) => {
+    navigate(`/admin/products/${product.product_id}`, { state: { product } });
   };
 
   if (loading) {
@@ -64,7 +70,7 @@ const ProductList = () => {
 
   return (
     <div className="container px-0 mt-4">
-      <h2 style={{marginLeft: '150px'}}>Produkte</h2>
+      <h2 style={{ marginLeft: '150px' }}>Produktverwaltung</h2>
       {products.length === 0 ? (
         <div className="text-center w-100">
           <Alert variant="warning">Keine Produkte gefunden.</Alert>
@@ -104,14 +110,14 @@ const ProductList = () => {
                 </Card.Body>
               </Card>
 
-              {/* "In den Warenkorb" Card */}
+              {/*Edit Card*/}
               <Card
-                className="add-to-cart-card shadow-sm"
+                className="edit-card shadow-sm"
                 style={{ cursor: 'pointer', flex: '0 0 30%' }}
-                onClick={() => handleAddToCart(product.product_id, product.price, product.title, product.description, product.image_url)}
+                onClick={() => adminEdit(product)} // Call the admin function on click
               >
                 <Card.Body className="d-flex justify-content-center align-items-center">
-                  <span className="text-muted d-block">In den Warenkorb</span>
+                  <span className="text-muted d-block">Editieren</span> {/* Changed text to "Editieren" */}
                 </Card.Body>
               </Card>
             </div>
@@ -132,4 +138,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default AdminProductList;

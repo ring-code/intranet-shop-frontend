@@ -121,7 +121,7 @@ const Cart = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container px-0 mt-4">
       <h2 style={{ marginLeft: '150px' }}>Warenkorb</h2>
   
       {/* Success and Error Messages */}
@@ -148,10 +148,11 @@ const Cart = () => {
               </div>
   
               {/* Right Side: Description, Quantity, and Total Price */}
-              <div className="d-flex flex-column flex-grow-1" style={{ height: '100%' }}>
+              <div className="d-flex flex-column flex-grow-1 px-0 m-0" style={{ height: '100%',}}>
                 {/* Description & Price Card */}
-                <Card
-                  className="product-card shadow-sm mb-2"
+                
+                <Card                 
+                  className="product-description-card shadow-sm mb-2"
                   onClick={() => handleCardClick(product)}
                   style={{ cursor: 'pointer', flex: '1' }}
                 >
@@ -169,11 +170,11 @@ const Cart = () => {
                 </Card>
   
                 {/* Row for Quantity Control and Total Price */}
-                <Row className="w-100 mt-2 d-flex" style={{ flex: '1' }}>
+                <Row className="w-100 d-flex" style={{ flex: '1' }}>
                   {/* Decrease Button Card */}
                   <Col xs={3} className="d-flex">
                     <Card
-                      className="shadow-sm mb-2"
+                      className="remove-from-cart-card shadow-sm "
                       style={{ cursor: 'pointer', flex: '1', height: '100%' }}
                       onClick={() => handleDecreaseQuantity(product.product_id)}
                     >
@@ -185,7 +186,7 @@ const Cart = () => {
   
                   {/* Quantity Card */}
                   <Col xs={3} className="d-flex">
-                    <Card className="shadow-sm mb-2" style={{ flex: '1', height: '100%' }}>
+                    <Card className="shadow-sm " style={{ flex: '1', height: '100%' }}>
                       <Card.Body className="d-flex justify-content-center align-items-center" style={{ height: '100%' }}>
                         <span className="text-muted d-block">{product.quantity}</span>
                       </Card.Body>
@@ -195,7 +196,7 @@ const Cart = () => {
                   {/* Increase Button Card */}
                   <Col xs={3} className="d-flex">
                     <Card
-                      className="shadow-sm mb-2"
+                      className="add-to-cart-card shadow-sm "
                       style={{ cursor: 'pointer', flex: '1', height: '100%' }}
                       onClick={() => handleIncreaseQuantity(product.product_id)}
                     >
@@ -207,7 +208,7 @@ const Cart = () => {
   
                   {/* Total Price Card */}
                   <Col xs={3} className="d-flex">
-                    <Card className="product-card shadow-sm mb-2" style={{ flex: '1', height: '100%' }}>
+                    <Card className="product-card shadow-sm " style={{ flex: '1', height: '100%' }}>
                       <Card.Body className="d-flex justify-content-center align-items-center" style={{ height: '100%' }}>
                         <strong>{(product.price * product.quantity).toFixed(2)}€</strong>
                       </Card.Body>
@@ -220,12 +221,10 @@ const Cart = () => {
   
           {/* Total Price for All Products */}
           {cart.length > 0 && (
-            <Card className="product-card shadow-sm mb-2" style={{ flex: '1' }}>
+            <Card className="product-card shadow-sm " style={{ flex: '1' }}>
               <Card.Body>
-                <Card.Title>Gesamtpreis für alle Produkte:</Card.Title>
-                <Card.Text>
-                  <strong>{calculateTotal()} €</strong>
-                </Card.Text>
+                <Card.Title>Gesamtpreis für alle Produkte: <strong>{calculateTotal()} €</strong></Card.Title>
+                <br />
                 <Button variant="primary" onClick={placeOrder} style={{ width: '100%' }}>
                   Bestellung abschicken
                 </Button>

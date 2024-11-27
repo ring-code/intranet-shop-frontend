@@ -5,7 +5,7 @@ import { useCart } from './CartContext';
 
 import BackButton from './BackButton';
 
-const ProductDetail = () => {
+const ProductDetails = () => {
   const { state } = useLocation(); // Get the state passed from the ProductList component
   const { product } = state || {}; // Destructure the product data
   const { handleAddToCart } = useCart();
@@ -70,4 +70,4 @@ const ProductDetail = () => {
   );
 };
 
-export default ProductDetail;
+export default ProductDetails;
