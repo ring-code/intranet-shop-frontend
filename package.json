@@ -20,7 +20,8 @@
     "dev": "nodemon --watch src --exec \"npm run start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "docs": "jsdoc -c jsdoc.json"
   },
   "eslintConfig": {
     "extends": [
@@ -41,6 +42,7 @@
     ]
   },
   "devDependencies": {
+    "jsdoc": "^4.0.4",
     "nodemon": "^3.1.7"
   }
 }
