@@ -24,7 +24,7 @@ const ProductDetails = () => {
   });
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 mb-3">
       <Card className="product-details-card shadow-sm">
         <Card.Body>
           <Card.Img
@@ -50,22 +50,20 @@ const ProductDetails = () => {
                   ))}
                 </tbody>
               </Table>
+
+              <Card
+              className="add-to-cart-card shadow-sm mb-3"
+              onClick={() => handleAddToCart(product.product_id, product.price, product.title, product.description, product.image_url)}
+              style={{ cursor: 'pointer', padding: '15px' }}
+              >
+              In den Warenkorb
+              </Card>
+
+             <BackButton />
             </div>
           </div>
         </Card.Body>
       </Card>
-
-      <Card
-         className="add-to-cart-card shadow-sm"
-         style={{ cursor: 'pointer', flex: '0 0 30%' }}
-         onClick={() => handleAddToCart(product.product_id, product.price, product.title, product.description, product.image_url)}
-      >
-        <Card.Body className="d-flex justify-content-center align-items-center">
-            <span className="text-muted d-block">In den Warenkorb</span>
-        </Card.Body>
-      </Card>
-      <BackButton />
-                  
     </div>
   );
 };
