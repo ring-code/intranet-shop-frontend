@@ -5,9 +5,11 @@ import { useCart } from './CartContext';
 
 
 /**
- * ProductList component fetches a list of products from the server,
+ * @module ProductList
+ * @description ProductList component fetches a list of products from the server,
  * displays them in cards, and allows users to view details or add products to the cart.
- *
+ * 
+ * 
  * @returns {JSX.Element} The product list with loading and error states, and product image modal.
  */
 const ProductList = () => {
@@ -56,7 +58,7 @@ const ProductList = () => {
 
   /**
    * Handle the click event on a product card to navigate to its detail page.
-   * 
+   * @function handleCardClick
    * @param {Object} product - The product that was clicked.
    * @returns {void}
    */
@@ -66,7 +68,7 @@ const ProductList = () => {
 
   /**
    * Handle the click event on an image to open the product image in a modal.
-   * 
+   * @function handleImageClick
    * @param {string} imageUrl - The URL of the image to be displayed in the modal.
    * @param {Object} product - The product associated with the image.
    * @returns {void}
@@ -80,7 +82,7 @@ const ProductList = () => {
   
   /**
    * Close the modal when called.
-   * 
+   * @function handleCloseModal
    * @returns {void}
    */
   const handleCloseModal = () => {
@@ -94,7 +96,7 @@ const ProductList = () => {
   }
 
   if (error) {
-    return <div className="text-center"><Alert variant="danger">{error}</Alert></div>;
+    return <div className="text-center mt-4"><Alert variant="danger">{error}</Alert></div>;
   }
 
   return (

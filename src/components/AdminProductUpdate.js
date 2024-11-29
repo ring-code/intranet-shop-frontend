@@ -1,3 +1,11 @@
+/**
+ * @module admin
+ * @name AdminProductUpdate
+ * @description Admin page for editing and deleting Products
+ * @returns {JSX.Element} The AdminProductDetails component
+ */
+
+
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, Alert, Table, Form } from 'react-bootstrap';
@@ -9,7 +17,15 @@ const AdminProductDetails = () => {
 
   const navigate = useNavigate();
 
-  // Initialize formData with default values
+  /**
+   * @name FormData
+   * Form data state to store product details.
+   * @property {string} title - The title of the product.
+   * @property {string} price - The price of the product.
+   * @property {string} description - The description of the product.
+   * @property {File|null} image - The image file for the product.
+   * @property {string} image_url - The URL of the product's image.
+   */
   const [formData, setFormData] = useState({
     title: '',
     price: '',
@@ -18,22 +34,21 @@ const AdminProductDetails = () => {
     image_url: '', // For the current image URL
   });
 
-  // New state for image preview
-  const [imagePreview, setImagePreview] = useState('');
+  
+  const [imagePreview, setImagePreview] = useState(''); // Preview image URL (empty string initially)
 
-  // New state for showing the image file name and path
-  const [imageFileName, setImageFileName] = useState('');
+ 
+  const [imageFileName, setImageFileName] = useState(''); // File name for selected image
 
-  // State for success and error messages
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // Success message string
 
-  // State for showing the confirmation dialog
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  
+  const [errorMessage, setErrorMessage] = useState(''); // Error message string
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // Boolean for delete confirmation visibility
 
   // Update formData and imagePreview when product is available
   useEffect(() => {
-    
     if (product) {
       setFormData({
         title: product.title || '',
@@ -56,10 +71,14 @@ const AdminProductDetails = () => {
 
   // Early return if no product is found
   if (!product) {
-    return <div className="text-center"><Alert variant="danger">Produkt nicht gefunden.</Alert></div>;
+    return <div className="text-center mt-4"><Alert variant="danger">Produkt nicht gefunden.</Alert></div>;
   }
 
-  // Handle form field changes
+  /**
+   * @function handleChange
+   * Handles form field changes for title, price, and description.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event triggered by the form input change.
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -68,7 +87,11 @@ const AdminProductDetails = () => {
     }));
   };
 
-  // Handle image change
+  /**
+   * @function handleImageChange
+   * Handles image file change, updates the form data and image preview.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event triggered by the image input change.
+   */
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -77,7 +100,6 @@ const AdminProductDetails = () => {
         image: file,
       }));
 
-      // Create a URL for the selected image and update the image preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result); // Set the preview URL
@@ -89,7 +111,11 @@ const AdminProductDetails = () => {
     }
   };
 
-  // Handle save or update product details
+  /**
+   * @function handleSave
+   * Handles saving or updating product details to the server.
+   * Sends formData including title, price, description, and image if present.
+   */
   const handleSave = async () => {
     const formDataToSubmit = new FormData();
     formDataToSubmit.append('title', formData.title);
@@ -124,6 +150,11 @@ const AdminProductDetails = () => {
     }
   };
 
+  /**
+   * @function handleDelete
+   * Handles the deletion of a product after confirming with the user.
+   * @returns {Promise<void>}
+   */
   const handleDelete = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -152,12 +183,12 @@ const AdminProductDetails = () => {
     }
   };
 
-  // Function to confirm deletion
+  
   const confirmDelete = () => {
     setShowDeleteConfirm(true); // Show confirmation dialog
   };
 
-  // Function to cancel deletion
+  
   const cancelDelete = () => {
     setShowDeleteConfirm(false); // Hide confirmation dialog
   };

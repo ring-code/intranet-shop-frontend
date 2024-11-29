@@ -1,3 +1,11 @@
+/**
+ * @module Backbutton
+ * @description Card-like button component to navigate backwards
+ * @returns {JSX.Element} The BackButton component.
+ * 
+ */
+
+
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';

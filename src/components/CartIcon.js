@@ -3,6 +3,11 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { Badge } from 'react-bootstrap';
 import { useCart } from './CartContext';
 
+/**
+ * @module CartIcon
+ * @description Small shopping cart icon in the NavBar. Shows the Cart and the Number of items in it.
+ * @returns {JSX.Element} The Icon
+ */
 const CartIcon = () => {
   const { cart } = useCart(); 
 

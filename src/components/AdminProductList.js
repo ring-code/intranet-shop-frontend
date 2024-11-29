@@ -1,3 +1,12 @@
+/**
+ * @module Admin
+ * @name AdminProductList
+ * @description Works like ProductList, just links to the product edit page instead of adding to the cart.
+ * @returns {JSX.Element} The AdminProductList component.
+ * 
+ */
+
+
 import React, { useState, useEffect } from 'react';
 import { Card, Spinner, Alert, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';

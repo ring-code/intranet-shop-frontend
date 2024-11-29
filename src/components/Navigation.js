@@ -3,12 +3,12 @@ import logo from '../logo.svg';
 import { Link } from 'react-router-dom';
 import { Container, Navbar, Nav, Image, Dropdown } from 'react-bootstrap';
 import { useCart } from './CartContext';
-import CartIcon from './CartIcon'; // Import the CartIcon component
+import CartIcon from './CartIcon'; 
 
 /**
  * Navigation component handles the navigation bar and updates based on the user's login state.
- * It also synchronizes the cart and user information.
- *
+ * It also synchronizes user information.
+ * @module Navigation
  * @param {Object} props - The component props
  * @param {boolean} props.isLoggedIn - The user's login state
  * @param {boolean} props.isAdmin - The user's admin state
@@ -17,7 +17,7 @@ import CartIcon from './CartIcon'; // Import the CartIcon component
  */
 const Navigation = ({ isLoggedIn, isAdmin, handleLogout }) => {
   const prevIsLoggedIn = React.useRef(isLoggedIn); 
-  const { cart, resetCart } = useCart(); 
+  const {resetCart } = useCart(); 
   const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || ''); 
 
   useEffect(() => {
@@ -32,11 +32,6 @@ const Navigation = ({ isLoggedIn, isAdmin, handleLogout }) => {
     prevIsLoggedIn.current = isLoggedIn; // Update the previous login state
   }, [isLoggedIn, resetCart]); // Runs when isLoggedIn or resetCart changes
 
-  /**
-   * Calculates the total number of items in the cart.
-   * @returns {number} Total number of items in the cart
-   */
-  const totalItemsInCart = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="navbar-fixed">

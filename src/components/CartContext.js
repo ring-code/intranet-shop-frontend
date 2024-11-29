@@ -4,10 +4,12 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 const CartContext = createContext();
 
 /**
- * CartProvider component that manages the shopping cart state and provides context to its children.
+ * @module CartContext
+ * @description CartProvider component that manages the shopping cart state and provides context to its children.
  * It handles adding items to the cart, saving the cart to localStorage, and resetting the cart.
  * Also loads the cart from localStorage on initial mount.
  *
+ * 
  * @param {Object} props - The props passed to the provider component.
  * @param {React.ReactNode} props.children - The children components that will have access to the cart context.
  */
@@ -18,7 +20,7 @@ export const CartProvider = ({ children }) => {
   /**
    * Adds an item to the cart. If the item already exists in the cart, it increases the quantity.
    * If it's a new item, it adds it to the cart.
-   *
+   * @function handleAddToCart
    * @param {number} productId - The unique identifier for the product.
    * @param {number} price - The price of the product.
    * @param {string} title - The title/name of the product.
@@ -75,10 +77,11 @@ export const CartProvider = ({ children }) => {
   }, [cart, token]);
 
   /**
+   * @function resetCart
    * Resets the cart to an empty array.
    */
   const resetCart = () => {
-    setCart([]); // Clear the cart state
+    setCart([]); 
   };
 
   return (

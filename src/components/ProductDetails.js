@@ -5,11 +5,20 @@ import { useCart } from './CartContext';
 
 import BackButton from './BackButton';
 
+/**
+ * @module ProductDetails
+ * @description A component that displays detailed information about a selected product.
+ * It allows users to view the product's image, title, price, and additional details.
+ * Users can add the product to their cart from this page.
+ * 
+ * @returns {JSX.Element} The ProductDetails component.
+ */
 const ProductDetails = () => {
   const { state } = useLocation(); // Get the state passed from the ProductList component
   const { product } = state || {}; // Destructure the product data
   const { handleAddToCart } = useCart();
-
+  
+  // Early return if no product data is available
   if (!product) {
     return <div className="text-center"><Alert variant="danger">Produkt nicht gefunden.</Alert></div>;
   }

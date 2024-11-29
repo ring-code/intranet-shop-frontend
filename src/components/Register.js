@@ -3,6 +3,18 @@ import { Row, Col, Card, Button, Alert, Form, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../utils/AuthUtil'; // Import the shared login logic
 
+
+/**
+ * @module RegistrationForm
+ * @description A registration form component that allows users to register by providing an email, password, 
+ * and confirming the password. Upon successful registration, users are automatically logged in.
+ * 
+ * @param {Object} props - The component's props.
+ * @param {function} props.setIsLoggedIn - A function to set the user's login status.
+ * @param {function} [props.setIsAdmin] - A function to set the user's admin status (default is a no-op).
+ * 
+ * @returns {JSX.Element} The RegistrationForm component.
+ */
 const RegistrationForm = ({ setIsLoggedIn, setIsAdmin = () => {} }) => {
   
   const [formData, setFormData] = useState({
@@ -15,6 +27,11 @@ const RegistrationForm = ({ setIsLoggedIn, setIsAdmin = () => {} }) => {
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
+  /**
+   * @function handleInputChange
+   * Handles the change of input fields and updates the corresponding state.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object of the input change.
+   */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -23,6 +40,14 @@ const RegistrationForm = ({ setIsLoggedIn, setIsAdmin = () => {} }) => {
     }));
   };
 
+
+  /**
+   * @function handleSubmit
+   * Handles the form submission, including validation and registration logic.
+   * It ensures the password and password confirmation match before sending a registration request.
+   * 
+   * @param {React.FormEvent<HTMLFormElement>} e - The form submission event.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
 

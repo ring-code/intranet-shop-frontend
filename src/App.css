@@ -53,6 +53,7 @@
 .back-card,
 .minus-button,
 .plus-button {
+  cursor: pointer;
   position: relative;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;

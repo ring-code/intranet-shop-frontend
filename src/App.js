@@ -1,3 +1,12 @@
+/**
+ * Main App component that handles routing, authentication state, and user session management.
+ * It loads user data from localStorage on mount and sets up routing for both public and protected routes.
+ * Includes logic for user login, logout, and cart management.
+ *
+ * @module App
+ *
+ * @returns {JSX.Element} The rendered app component with routes and navigation.
+ */
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
@@ -56,7 +65,11 @@ function App() {
     }
   }, []);
 
-  // Handle logout functionality
+  /**
+   * @function handleLogout
+   * Handles user logout, removes all session-related data from localStorage,
+   * clears state, and redirects to the home page.
+   */
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
@@ -70,7 +83,14 @@ function App() {
     navigate('/');
   };
 
-  // Protect admin routes
+  /**
+   * @function AdminRoute
+   * Ensures that only users with admin privileges can access certain pages. If the user is not an admin, they are redirected to the home page.
+   * 
+   * @param {Object} props - The props for the AdminRoute component.
+   * @param {React.ReactNode} props.children - The child components to be rendered if the user is an admin.
+   * @returns {React.ReactNode} If the user is an admin, the children are rendered; otherwise, the user is redirected.
+   */
   function AdminRoute({ children}) {
     const isAdmin = localStorage.getItem('isAdmin') === 'true';
     if (!isAdmin) {

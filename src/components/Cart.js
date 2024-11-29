@@ -5,8 +5,8 @@ import { useCart } from './CartContext';
 
 
 /**
- * @name Cart
- * Cart component where users can view and manage their shopping cart items.
+ * @module Cart
+ * @description Cart component where users can view and manage their shopping cart items.
  * Users can increase/decrease quantities of items, remove items, and place orders.
  */
 const Cart = () => {
@@ -16,6 +16,7 @@ const Cart = () => {
   const navigate = useNavigate();  
 
   /**
+   * @function handleRemoveFromCart
    * Removes an item from the cart.
    * @param {number} productId - The ID of the product to remove from the cart.
    */
@@ -26,6 +27,7 @@ const Cart = () => {
   };
 
   /**
+   * @function handleIncreaseQuantity
    * Increases the quantity of a product in the cart.
    * @param {number} productId - The ID of the product to increase quantity for.
    */
@@ -40,6 +42,8 @@ const Cart = () => {
   };
 
   /**
+   * 
+   * @function handleDecreaseQuantity
    * Decreases the quantity of a product in the cart.
    * If the quantity reaches zero, it removes the product from the cart.
    * @param {number} productId - The ID of the product to decrease quantity for.
@@ -63,6 +67,7 @@ const Cart = () => {
   };
 
   /**
+   * @function calculateTotal
    * Calculates the total price for all items in the cart.
    * @returns {string} The total price formatted as a string with two decimal places.
    */
@@ -73,6 +78,7 @@ const Cart = () => {
   
 
   /**
+   * @function placeOrder
    * Places the order for the products in the cart by sending a request to the server.
    * Clears the cart and navigates to the orders page upon successful order placement.
    */

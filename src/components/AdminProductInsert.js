@@ -3,10 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import { Card, Alert, Form } from 'react-bootstrap';
 import BackButton from './BackButton';
 
+/**
+ *  @module AdminInsert
+ * 
+ * @description A component for adding new products to the admin panel. Allows the user to input product details,
+ * upload an image, and submit the form to the server.
+ * @returns {JSX.Element} The AdminProductInsert component.
+ */
 const AdminProductInsert = () => {
   const navigate = useNavigate();
 
-  // Initialize formData with default values
+  /**
+   * @typedef {Object} FormData
+   * @property {string} title - The title of the product.
+   * @property {string} price - The price of the product in euros.
+   * @property {string} description - The description of the product.
+   * @property {File|null} image - The image file for the product.
+   */
+
+  
   const [formData, setFormData] = useState({
     title: '',
     price: '',
@@ -14,17 +29,19 @@ const AdminProductInsert = () => {
     image: null,
   });
 
-  // New state for image preview
   const [imagePreview, setImagePreview] = useState('');
 
-  // New state for showing the image file name and path
   const [imageFileName, setImageFileName] = useState('');
 
-  // State for success and error messages
   const [successMessage, setSuccessMessage] = useState('');
+
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Handle form field changes
+  /**
+   * @function handleChange
+   * @description Updates the state for form fields when the user types in the input fields.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The change event from the input field.
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -33,7 +50,11 @@ const AdminProductInsert = () => {
     }));
   };
 
-  // Handle image change
+  /**
+   * @function handleImageChange
+   * @description Handles the selection of an image file, sets the image preview, and updates the form data.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The change event from the file input.
+   */
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -42,19 +63,21 @@ const AdminProductInsert = () => {
         image: file,
       }));
 
-      // Create a URL for the selected image and update the image preview
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result); // Set the preview URL
+        setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
 
-      // Set the file name for the selected image
       setImageFileName(file.name);
     }
   };
 
-  // Validate the form data before submitting
+  /**
+   * @function validateFormData
+   * @description Validates the form data to ensure all required fields are filled.
+   * @returns {boolean} True if the form data is valid, false otherwise.
+   */
   const validateFormData = () => {
     if (!formData.title || !formData.price || !formData.description) {
       setErrorMessage('Alle Felder müssen ausgefüllt werden.');
@@ -63,10 +86,14 @@ const AdminProductInsert = () => {
     return true;
   };
 
-  // Handle save or insert product details
+  /**
+   * @function handleSave
+   * @description Submits the product data to the server if the form is valid.
+   * Displays success or error messages based on the response.
+   */
   const handleSave = async () => {
     if (!validateFormData()) {
-      return; // Prevent submission if validation fails
+      return;
     }
 
     const formDataToSubmit = new FormData();
@@ -82,9 +109,9 @@ const AdminProductInsert = () => {
       const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/admin/insert`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-        body: formDataToSubmit,  // Body contains FormData
+        body: formDataToSubmit,
       });
 
       if (response.ok) {
@@ -106,19 +133,15 @@ const AdminProductInsert = () => {
       <h1>Neues Produkt hinzufügen</h1>
       <Card className="product-details-card shadow-sm">
         <Card.Body>
-          {/* Displaying success and error messages */}
           {successMessage && <Alert variant="success">{successMessage}</Alert>}
           {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
 
           <Form>
-            {/* Table for Editable Fields */}
             <table className="table table-striped mb-3">
               <tbody>
-                {/* Image Row */}
                 <tr>
                   <td><strong>Bild</strong></td>
                   <td>
-                    {/* Show current image or new preview */}
                     {imagePreview && (
                       <div className="mb-2">
                         <img
@@ -135,8 +158,6 @@ const AdminProductInsert = () => {
                     />
                   </td>
                 </tr>
-
-                {/* Title */}
                 <tr>
                   <td><strong>Titel</strong></td>
                   <td>
@@ -148,8 +169,6 @@ const AdminProductInsert = () => {
                     />
                   </td>
                 </tr>
-
-                {/* Price */}
                 <tr>
                   <td><strong>Preis (€)</strong></td>
                   <td>
@@ -161,8 +180,6 @@ const AdminProductInsert = () => {
                     />
                   </td>
                 </tr>
-
-                {/* Description */}
                 <tr>
                   <td><strong>Beschreibung</strong></td>
                   <td>
@@ -173,15 +190,10 @@ const AdminProductInsert = () => {
                       value={formData.description}
                       onChange={handleChange}
                     />
-                    <small className="text-muted">
-                      Format für Tabellen-Output mit 2 Spalten <code>Key: Value</code> Delimiter <code>|</code>
-                    </small>
                   </td>
                 </tr>
               </tbody>
             </table>
-
-            {/* Save Button */}
             <Card
               className="add-to-cart-card shadow-sm mb-3"
               onClick={handleSave}
@@ -189,13 +201,10 @@ const AdminProductInsert = () => {
             >
               Speichern
             </Card>
-
             <BackButton />
           </Form>
         </Card.Body>
       </Card>
-
-      
     </div>
   );
 };
