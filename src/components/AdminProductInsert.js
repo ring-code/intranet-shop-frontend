@@ -190,6 +190,9 @@ const AdminProductInsert = () => {
                       value={formData.description}
                       onChange={handleChange}
                     />
+                    <small className="text-muted">
+                      Format für Tabellen-Output mit 2 Spalten <code>Key: Value</code> Delimiter <code>|</code>
+                    </small>
                   </td>
                 </tr>
               </tbody>
