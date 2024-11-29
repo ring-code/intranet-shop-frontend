@@ -21,16 +21,15 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
-  const [userId, setUserId] = useState(null);
+  
   const [cart, setCart] = useState([]);
   const navigate = useNavigate();
 
   // Load user data from localStorage on component mount
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const storedIsAdmin = localStorage.getItem('isAdmin'); // This is stored as a string
+    
+    const storedIsAdmin = localStorage.getItem('isAdmin'); 
     const storedIsLoggedIn = localStorage.getItem('isLoggedIn');
-    const storedUserId = localStorage.getItem('userId');
     const storedUserEmail = localStorage.getItem('userEmail');
     const storedCart = localStorage.getItem('cart');
 
@@ -41,7 +40,6 @@ function App() {
     setIsAdmin(storedIsAdmin === 'true');
 
     // Set user information if available
-    if (storedUserId) setUserId(storedUserId);
     if (storedUserEmail) setUserEmail(storedUserEmail);
 
     // Load the cart from localStorage
@@ -61,11 +59,10 @@ function App() {
   // Handle logout functionality
   const handleLogout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('isAdmin');
     localStorage.removeItem('cart');
-    localStorage.setItem('isLoggedIn', 'false'); // Make sure to set 'isLoggedIn' to false in localStorage
+    localStorage.setItem('isLoggedIn', 'false'); 
     setIsLoggedIn(false);
     setIsAdmin(false);
     setUserEmail(null);
@@ -82,7 +79,6 @@ function App() {
     return children;
   }
 
-  console.log('isAdmin:', isAdmin);
 
   return (
     <CartProvider>
@@ -98,7 +94,7 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
-          <Route path="/register" element={<RegistrationForm isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/register" element={<RegistrationForm isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setIsAdmin={setIsAdmin} />} />
           <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setIsAdmin={setIsAdmin} />} />
           <Route path="/products" element={<ProductList />} />
           <Route path="/products/:id" element={<ProductDetails />} />
