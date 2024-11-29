@@ -31,6 +31,7 @@ const ProductDetails = () => {
             variant="top"
             src={`https://fi.mshome.net:3001/${product.image_url || '/static/images/default-product.jpg'}`}
             style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+            alt = {product.title}
           />
           <div className="mt-3">
             <Card.Title>{product.title}</Card.Title>

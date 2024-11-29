@@ -3,6 +3,7 @@ import logo from '../logo.svg';
 import { Link } from 'react-router-dom';
 import { Container, Navbar, Nav, Image, Dropdown } from 'react-bootstrap';
 import { useCart } from './CartContext';
+import CartIcon from './CartIcon'; // Import the CartIcon component
 
 /**
  * Navigation component handles the navigation bar and updates based on the user's login state.
@@ -19,12 +20,10 @@ const Navigation = ({ isLoggedIn, isAdmin, handleLogout }) => {
   const { cart, resetCart } = useCart(); 
   const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || ''); 
 
-  
   useEffect(() => {
     const email = localStorage.getItem('userEmail'); 
     setUserEmail(email || ''); 
   }, [isLoggedIn]); 
-
 
   useEffect(() => {
     if (!isLoggedIn && prevIsLoggedIn.current) {
@@ -39,73 +38,76 @@ const Navigation = ({ isLoggedIn, isAdmin, handleLogout }) => {
    */
   const totalItemsInCart = cart.reduce((acc, item) => acc + item.quantity, 0);
 
-    
-    return <Navbar bg="dark" variant="dark" expand="lg" className='navbar-fixed'>
-          
-    <Container>
-      
-      <Navbar.Brand as={Link} to="/">
-        <Image src={logo} width="50" />
-      </Navbar.Brand>
-      
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      
-      <Navbar.Collapse id="basic-navbar-nav">
-        
-        <Nav className="me-auto">
-          <Nav.Link as={Link} to="/">Home</Nav.Link>
-          
-          {isLoggedIn ?
-          <>
-            <Nav.Link as={Link} to="/products">Shop</Nav.Link>
-            {cart && cart.length > 0 && (
-                <Nav.Link as={Link} to="/cart">Warenkorb ({totalItemsInCart})</Nav.Link>
-            )}
-            <Nav.Link as={Link} to="/orders">Bestellungen</Nav.Link>
-          </>
-          :
-          <>
-          <Nav.Link as={Link} to="/login">Login</Nav.Link>
-          <Nav.Link as={Link} to="/register">Registrierung</Nav.Link>
-          </>
-          }
-
-          {isLoggedIn && isAdmin && (
-            <Dropdown>
-            <Dropdown.Toggle  id="dropdown-custom-components">
-              Administration
-            </Dropdown.Toggle>
+  return (
+    <Navbar bg="dark" variant="dark" expand="lg" className="navbar-fixed">
+      <Container>
+        {/* Brand Logo */}
+        <Navbar.Brand as={Link} to="/" style={{ display: 'flex', alignItems: 'center' }}>
+          <Image src={logo} width="50" />
+        </Navbar.Brand>
   
-            <Dropdown.Menu>
-              <Dropdown.Item as={Link} to="/admin/products">Produkte verwalten</Dropdown.Item>
-              <Dropdown.Item as={Link} to="/admin/insert">Produkt hinzufügen</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-          )}
-         
-
-        </Nav>
-
-        <Nav className="ms-auto">
+        {/* Navbar Toggle */}
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+  
+        {/* Navbar Links */}
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto align-items-center">
             {isLoggedIn ? (
-              <>                
-                <Nav.Link href="#" className="text-light navbar-email">{userEmail}</Nav.Link>
-                
-                
-                
-                <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
-              
+              <>
+                <Nav.Link as={Link} to="/products">Shop</Nav.Link>
+  
+                {/* Cart Icon with Fixed Alignment */}
+                <Nav.Link as={Link} to="/cart" style={{ position: 'relative', minWidth: '50px', display: 'flex', alignItems: 'center' }}>
+                  <CartIcon />
+                </Nav.Link>
+              </>
+            ) : (
+              <>
+                <Nav.Link as={Link} to="/login">Login</Nav.Link>
+                <Nav.Link as={Link} to="/register">Registrierung</Nav.Link>
+              </>
+            )}
+          </Nav>
+  
+          <Nav className="ms-auto align-items-center">
+            {isLoggedIn ? (
+              <>
+                {/* Admin Dropdown */}
+                {isAdmin && (
+                  <Dropdown>
+                    <Dropdown.Toggle id="dropdown-custom-components" style={{ display: 'flex', alignItems: 'center' }}>
+                      Administration
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item as={Link} to="/admin/products">Produkte verwalten</Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/admin/insert">Produkt hinzufügen</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                )}
+  
+                {/* User Email */}
+                <Nav.Link href="#" className="text-light navbar-email" style={{ display: 'flex', alignItems: 'center' }}>
+                  {userEmail}
+                </Nav.Link>
+  
+                {/* Orders Link */}
+                <Nav.Link as={Link} to="/orders" style={{ display: 'flex', alignItems: 'center' }}>
+                  Bestellungen
+                </Nav.Link>
+  
+                {/* Logout Link */}
+                <Nav.Link onClick={handleLogout} style={{ display: 'flex', alignItems: 'center' }}>
+                  Logout
+                </Nav.Link>
               </>
             ) : (
               <></>
             )}
           </Nav>
-
-
-        
-      </Navbar.Collapse>
-    </Container>
-  </Navbar>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
   
 };
 

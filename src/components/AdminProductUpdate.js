@@ -163,7 +163,7 @@ const AdminProductDetails = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 mb-3">
       <h1>Produkt editieren: #{product.product_id}, {product.title}</h1>
       <Card className="product-details-card shadow-sm">
         <Card.Body>

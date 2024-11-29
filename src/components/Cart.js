@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Card, Button, Alert } from 'react-bootstrap';
+import { Card, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';  
 import { useCart } from './CartContext'; 
 
 
 /**
+ * @name Cart
  * Cart component where users can view and manage their shopping cart items.
  * Users can increase/decrease quantities of items, remove items, and place orders.
  */
@@ -115,8 +116,11 @@ const Cart = () => {
 
   return (
     <div className="container px-0 mt-4 mb-3">
+      {cart.length === 0 ? 
+      <h2 className=" mb-4">Warenkorb</h2>
+      :
       <h2 className="picture-site-aligned-text mb-4">Warenkorb</h2>
-  
+      }
       {/* Main Card Container */}
       <Card.Body className="position-relative">
         {/* Success and Error Messages */}

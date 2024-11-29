@@ -5,7 +5,7 @@ const Home = ({isLoggedIn}) => {
     return (
         <>
         <br />
-        <h1>Herzlich Willkommen im Mitarbeiter-Shop!</h1>
+        <h1>Herzlich willkommen im Mitarbeiter-Shop!</h1>
         {isLoggedIn ?
         <h2>Sie sind eingeloggt</h2>
         :
